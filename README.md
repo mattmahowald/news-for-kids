@@ -1,6 +1,6 @@
 # News For Kids Parsing Script
 
-### Overview
+## Overview
 
 There are three major steps to setting up your environment to run this script:
 
@@ -11,7 +11,7 @@ There are three major steps to setting up your environment to run this script:
 
 Then you will be ready to run the script.
 
-##### 1. Download Script
+### 1. Download Script
 
 **Option 1: Store the script on your computer**
 
@@ -23,7 +23,7 @@ this folder in
 **Option 2: Mount Google Drive on your computer**
 
 
-##### 2. Python
+### 2. Python
 All Mac and Linux-based Operating Systems come installed with python. Open up the Terminal application (which you can find if you open up finder then navigating to Applications then the Utilities folder). 
 
 You can then type into the command prompt, and expect to see a response somewhat like this.
@@ -42,7 +42,7 @@ you only plan to use Python for this script.
 
 As soon as your terminal confirms you have the correct version, you are ready to continue.
 
-##### 3. Packages
+### 3. Packages
 In order to communicate with the web, there are some third-party modules that are necessary
 to install. The first is the installer itself, called `pip` for Pip Installs Packages. To do
 this, open the terminal, and navigate to the location of your download, as explained in part
@@ -61,7 +61,7 @@ it didn't work, such as `error` or `failed` somewhere in the output.
 If it worked, great! You're done and ready to run the script. If not, feel free to email 
 me at mmahowald@lightsailed.com.
 
-### Running the script
+## Running the script
 
 This portion is extremely straightforward. Fire up a terminal and navigate to the folder
 with the script located in it. Then type
@@ -74,7 +74,7 @@ Welcome to the News-o-Matic Feed Parser™...
 The script will create a folder labeled with the date with all the .html files for
 the articles inside.
 
-### Errors
+## Fixing errors
 
 There are many possible errors you could run into, which I've tried to summarize here:
 
