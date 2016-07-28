@@ -11,7 +11,7 @@ There are three major steps to setting up your environment to run this script:
 
 Then you will be ready to run the script.
 
-### 1. Download Script
+#### 1. Download Script
 
 **Option 1: Store the script on your computer**
 
