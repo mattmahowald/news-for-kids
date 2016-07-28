@@ -49,6 +49,11 @@ this, open the terminal, and navigate to the location of your download, as expla
 1. Once there, type 
 
 ```sh
+$ sudo python get-pip.py
+Password: <your computer password here>
+```
+
+```sh
 $ pip install -r requirements.txt
 Collecting DateTime==4.1.1 (from -r requirements.txt (line 1))
 ...
