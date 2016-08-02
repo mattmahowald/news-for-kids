@@ -46,6 +46,8 @@ HEADERS = {HEADLINE_ID : "Headline",
     ADVANCED : "MainArticle5-6",
     SPANISH : "MainArticleSpanish"}
 
+TEST = True
+
 # The parent folder id for the google drive. To replace this,
 # go to the google drive belonging to the newsforkids user
 #     username: newsforkids
@@ -153,7 +155,7 @@ def write_to_html(date, feeds):
                                                 ch, 
                                                 TYPES[article_num]
                                             )
-            with open(name, 'w') as htmlfile:
+            with open("{}/{}".format(date, name), 'w') as htmlfile:
                 htmlfile.write(html)
 
 def email_warning(error_msg=""):
@@ -200,6 +202,7 @@ def upload_to_gdrive(folder_name, folder_path, drive, cron=False):
     # Upload the files
     files = os.listdir(folder_path)
     for f in files:
+        print("uploading file {}".format(f))
         new_file = drive.CreateFile({"parents" : [{"id": folder_id}], 
                                      "mimeType" : "text/plain",
                                      "title" : f})
@@ -259,7 +262,10 @@ def create_folder():
     return date, folder_path
 
 cron_flag = False
+
 def main():
+    if TEST:
+        PARENT_ID = "0B4sUJlbVBodvemNHcFRwMlAtUTg" 
     # the cron_flag is a hack and should probably be cleaned up
     cron_flag = sys.argv[-1] == '-c'
     if cron_flag:
@@ -268,6 +274,7 @@ def main():
     date, folder_path = create_folder()
     data = get_json_data(URL)
     feeds = [Feed(content) for content in data]
+    print(feeds)
     write_to_html(date, feeds)
     upload_to_gdrive(date, folder_path, drive, cron=cron_flag)
     shutil.rmtree(folder_path)
