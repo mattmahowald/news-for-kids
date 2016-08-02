@@ -41,7 +41,7 @@ TYPES = [STARTER, INTERMEDIATE, ADVANCED, SPANISH]
 # a corresponding error message will print to the log.
 HEADERS = {HEADLINE_ID : "Headline",
     SUBHEAD_ID : "Subheadline",
-    STARTER : "MainArticle1-",
+    STARTER : "MainArticle1-2",
     INTERMEDIATE : "MainArticle3-4",
     ADVANCED : "MainArticle5-6",
     SPANISH : "MainArticleSpanish"}
@@ -55,7 +55,7 @@ HEADERS = {HEADLINE_ID : "Headline",
 # the folder ID from the link, which is identifiable as the
 # last portion of the link.
 #     e.g. https://drive.google.com/drive/u/2/folders/<ID here>
-PARENT_ID = "0B4sUJlbVBodvemNHcFRwMlAtUTg"#"0B9AS7owE5ZT9NWNfVk9FRkFCNzA"
+PARENT_ID = "0B9AS7owE5ZT9NWNfVk9FRkFCNzA"
 
 # AWS Config for MY (Matt's) local machine
 # We should probably port this over at some point.
@@ -174,8 +174,8 @@ def email_warning(subject="News for Kids is Down",error_msg=""):
 
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject 
-    msg['From'] = "mmahowald@lightsailed.com"
-    msg['To'] = "mmahowald@lightsailed.com"
+    msg['From'] = "chris@lightsailed.com"
+    msg['To'] = "chris@lightsailed.com"
 
     content = MIMEText(error_msg, 'plain')
     msg.attach(content)
