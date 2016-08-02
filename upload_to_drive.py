@@ -9,8 +9,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("files", help="List files to be uploaded.", nargs="+")
 
 # Define the credentials folder
-home_dir = os.path.expanduser("~")
-credential_dir = os.path.join(home_dir, ".credentials")
+credential_dir = os.path.join(os.getcwd(), ".credentials")
 if not os.path.exists(credential_dir):
     os.makedirs(credential_dir)
 credential_path = os.path.join(credential_dir, "pydrive-credentials.json")
