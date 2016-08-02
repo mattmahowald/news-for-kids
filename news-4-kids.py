@@ -41,12 +41,10 @@ TYPES = [STARTER, INTERMEDIATE, ADVANCED, SPANISH]
 # a corresponding error message will print to the log.
 HEADERS = {HEADLINE_ID : "Headline",
     SUBHEAD_ID : "Subheadline",
-    STARTER : "MainArticle1-2",
+    STARTER : "MainArticle1-",
     INTERMEDIATE : "MainArticle3-4",
     ADVANCED : "MainArticle5-6",
     SPANISH : "MainArticleSpanish"}
-
-TEST = True
 
 # The parent folder id for the google drive. To replace this,
 # go to the google drive belonging to the newsforkids user
@@ -57,7 +55,15 @@ TEST = True
 # the folder ID from the link, which is identifiable as the
 # last portion of the link.
 #     e.g. https://drive.google.com/drive/u/2/folders/<ID here>
-PARENT_ID = "0B9AS7owE5ZT9NWNfVk9FRkFCNzA"
+PARENT_ID = "0B4sUJlbVBodvemNHcFRwMlAtUTg"#"0B9AS7owE5ZT9NWNfVk9FRkFCNzA"
+
+# AWS Config for MY (Matt's) local machine
+# We should probably port this over at some point.
+EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
+EMAIL_HOST_USER = 'AKIAIY3ZMG72GQS35G6A'
+EMAIL_HOST_PASSWORD = 'AperlrZzeFcE5Exbl94/bYTNQjhU4illDByhWvlsqkir' 
+EMAIL_PORT = 587    
+
 
 def strip_html(data):
     '''Useful function to strip html tags from a string'''
@@ -99,7 +105,7 @@ class Article:
         html = []
         html.append("<h1 id=\"mainhead\">{}</h1>".format(self.headline))
         html.append("<h2 id=\"deckhead\">{}</h2>".format(self.subhead))
-        html += ["<p>{}</p>".format(p) for p in self.body]
+        html += ["<p>{}</p>".format(p.strip()) for p in self.body]
         html.append(str("<p><small>{}\n<br/>\n"
                     "<i>{}</i></p></small>".format(self.date, self.byline)))
         html.append("".format(self.byline))
@@ -129,7 +135,7 @@ class Feed:
                 error_msg += "{}\t{}\n".format(h1, h2)
             print(error_msg)
             email_warning(error_msg) 
-            sys.exit(0)
+            self.articles = []
 
     def get_all(self):
         '''Returns a list of the html for every article in a feed'''
@@ -158,22 +164,16 @@ def write_to_html(date, feeds):
             with open("{}/{}".format(date, name), 'w') as htmlfile:
                 htmlfile.write(html)
 
-def email_warning(error_msg=""):
+def email_warning(subject="News for Kids is Down",error_msg=""):
     '''Sends an email to Chris if program goes down'''
-    if not cron_flag:
+    if not sys.argv[-1] == '-c':
         return
     import smtplib
     from email.mime.multipart import MIMEMultipart
     from email.mime.text import MIMEText
 
-    # AWS Config
-    EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
-    EMAIL_HOST_USER = 'AKIAIY3ZMG72GQS35G6A'
-    EMAIL_HOST_PASSWORD = 'AperlrZzeFcE5Exbl94/bYTNQjhU4illDByhWvlsqkir' 
-    EMAIL_PORT = 587
-
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = 'News for Kids is Down' 
+    msg['Subject'] = subject 
     msg['From'] = "mmahowald@lightsailed.com"
     msg['To'] = "mmahowald@lightsailed.com"
 
@@ -230,9 +230,9 @@ def authenticate_gdrive():
     # Try to load saved client credentials
     gauth.LoadCredentialsFile(credential_path)
     if gauth.credentials is None:
-        if cron:
-            error_msg = "This machine is not authenticated."
-            email_warning(error_msg)
+        if cron_flag:
+            error_msg = "The machine is not authenticated."
+            email_warning(error_msg=error_msg)
             sys.exit(0)
 
         print(str("You are not authenticated to write to GDrive.\n"
@@ -261,11 +261,9 @@ def create_folder():
     os.mkdir(folder_path)
     return date, folder_path
 
-cron_flag = False
 
 def main():
-    if TEST:
-        PARENT_ID = "0B4sUJlbVBodvemNHcFRwMlAtUTg" 
+    os.chdir(os.path.dirname(sys.argv[0]))
     # the cron_flag is a hack and should probably be cleaned up
     cron_flag = sys.argv[-1] == '-c'
     if cron_flag:
@@ -277,6 +275,13 @@ def main():
     print(feeds)
     write_to_html(date, feeds)
     upload_to_gdrive(date, folder_path, drive, cron=cron_flag)
+    if len(data[0]) == len(HEADERS): 
+        email_warning(subject="News for Kids API has changed",
+                      error_msg="""There are more fields than we are using
+        NEW HEADERS:
+        {}
+        OLD HEADERS:
+        {}""".format("\n".join(data[0]),"\n".join(HEADERS.values())))
     shutil.rmtree(folder_path)
 
 if __name__ == '__main__':

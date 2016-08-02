@@ -1,0 +1,57 @@
+
+This error most likely occured because of
+an issue with the headers in the json.
+RECEIVED	EXPECTED
+Headline	Headline
+MainArticle1-2	MainArticle1-
+MainArticle3-4	MainArticle3-4
+MainArticle5-6	MainArticle5-6
+MainArticleSpanish	MainArticleSpanish
+Subheadline	Subheadline
+
+
+This error most likely occured because of
+an issue with the headers in the json.
+RECEIVED	EXPECTED
+Headline	Headline
+MainArticle1-2	MainArticle1-
+MainArticle3-4	MainArticle3-4
+MainArticle5-6	MainArticle5-6
+MainArticleSpanish	MainArticleSpanish
+Subheadline	Subheadline
+
+
+This error most likely occured because of
+an issue with the headers in the json.
+RECEIVED	EXPECTED
+Headline	Headline
+MainArticle1-2	MainArticle1-
+MainArticle3-4	MainArticle3-4
+MainArticle5-6	MainArticle5-6
+MainArticleSpanish	MainArticleSpanish
+Subheadline	Subheadline
+
+
+This error most likely occured because of
+an issue with the headers in the json.
+RECEIVED	EXPECTED
+Headline	Headline
+MainArticle1-2	MainArticle1-
+MainArticle3-4	MainArticle3-4
+MainArticle5-6	MainArticle5-6
+MainArticleSpanish	MainArticleSpanish
+Subheadline	Subheadline
+
+
+This error most likely occured because of
+an issue with the headers in the json.
+RECEIVED	EXPECTED
+Headline	Headline
+MainArticle1-2	MainArticle1-
+MainArticle3-4	MainArticle3-4
+MainArticle5-6	MainArticle5-6
+MainArticleSpanish	MainArticleSpanish
+Subheadline	Subheadline
+
+[<__main__.Feed object at 0x7f3acff59748>, <__main__.Feed object at 0x7f3adb06dc88>, <__main__.Feed object at 0x7f3adb07aa20>, <__main__.Feed object at 0x7f3adb07a160>, <__main__.Feed object at 0x7f3ace572f60>]
+Successfully parsed articles for 20160802
