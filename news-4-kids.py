@@ -36,11 +36,13 @@ SPANISH = "spanish"
 TYPES = [STARTER, INTERMEDIATE, ADVANCED, SPANISH]
 
 # A dictionary for easy and clear index into the json dictionary
+# These get updated by newsomatic unfortunately. If they are updated
+# a corresponding error message will print to the log.
 HEADERS = {HEADLINE_ID : "Headline",
     SUBHEAD_ID : "Subheadline",
     STARTER : "MainArticle1-2",
-    INTERMEDIATE : "MainArticle5-6",
-    ADVANCED : "MainArticle",
+    INTERMEDIATE : "MainArticle3-4",
+    ADVANCED : "MainArticle5-6",
     SPANISH : "MainArticleSpanish"}
 
 # The parent folder id for the google drive. To replace this,
@@ -85,7 +87,7 @@ class Article:
             self._format(content)
 
     def get_html(self):
-        '''Returns the string '''
+        '''Returns the string for a single Article's HTML'''
         html = []
         html.append("<h1 id=\"mainhead\">{}</h1>".format(self.headline))
         html.append("<h2 id=\"deckhead\">{}</h2>".format(self.subhead))
@@ -101,12 +103,23 @@ class Feed:
         '''Creates a feed object for newsomatic articles'''
         headline = json_content[HEADERS[HEADLINE_ID]]
         subhead = json_content[HEADERS[SUBHEAD_ID]]
-        self.articles = [Article(json_content[HEADERS[t]],
-                headline,
-                subhead,
-                is_spanish = t == SPANISH     
-            ) for t in TYPES
-        ]
+
+        try:
+            self.articles = [Article(json_content[HEADERS[t]],
+                    headline,
+                    subhead,
+                    is_spanish = t == SPANISH     
+                ) for t in TYPES
+            ]
+        except KeyError as e:
+            email_warning()
+            print(e)
+            print('\nThis error most likely occured because of')
+            print('an issue with the headers in the json.\n')
+            print('received','\t','expected')
+            for h1, h2 in zip(sorted(json_content), sorted(HEADERS.values())):
+                print(h1,'\t', h2)
+            sys.exit(0)
 
     def get_all(self):
         '''Returns a list of the html for every article in a feed'''
@@ -175,6 +188,7 @@ def upload_to_gdrive(folder_name, folder_path, cron=False):
     gauth.LoadCredentialsFile(credential_path)
     if gauth.credentials is None:
         if cron:
+            print("This machine is not authenticated.")
             email_warning()
             sys.exit(0)
 
@@ -212,6 +226,12 @@ def upload_to_gdrive(folder_name, folder_path, cron=False):
                                      "title" : f})
         new_file.SetContentFile(os.path.join(folder_path, f))
         new_file.Upload()
+    print('Successfully parsed articles for {}'.format(folder_name))
+    error_log = drive.CreateFile({"parents" : [{"id": folder_id}], 
+                                     "mimeType" : "text/plain"})
+    error_log.SetContentFile('.newsforkids_errorlog.txt')
+    error_log.Upload()
+
 
 def create_folder():
     '''Creates a temporary folder for the current day's articles'''
@@ -224,12 +244,14 @@ def create_folder():
     return date, folder_path
 
 def main():
+    cron_flag = sys.argv[-1] == '-c'
+    if cron_flag:
+        sys.stdout = open('.newsforkids_errorlog.txt', 'a')
     date, folder_path = create_folder()
     data = get_json_data(URL)
     feeds = [Feed(content) for content in data]
     write_to_html(date, feeds)
-    upload_to_gdrive(date, folder_path, cron=sys.argv[1] == '-c')
-    print(sys.argv[1] == '-c')
+    upload_to_gdrive(date, folder_path, cron=cron_flag)
     shutil.rmtree(folder_path)
 
 if __name__ == '__main__':
